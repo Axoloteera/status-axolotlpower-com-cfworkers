@@ -1,0 +1,8 @@
+[
+    {
+        "name": "Cloudflare",
+        "type": "website",
+        "method": "get",
+        "url": "https://cloudflare.com"
+    }
+]

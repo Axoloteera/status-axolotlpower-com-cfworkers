@@ -2,8 +2,13 @@ name = "status-axolotlpower-com-workers"
 main = "src/index.js"
 compatibility_date = "2023-05-18"
 
-# Cron Triggers
-# Docs: https://developers.cloudflare.com/workers/platform/triggers/cron-triggers/
-# Configuration: https://developers.cloudflare.com/workers/wrangler/configuration/#triggers
 [triggers]
-crons = ["* * * * *"] # * * * * * = run every minute
+crons = ["*/2 * * * *"]
+
+[[kv_namespaces]]
+binding = "STATUS_INFO"
+id = "b9054efdd25d46cfb8bc8b805f9816c0"
+
+
+[placement]
+mode = "smart"
