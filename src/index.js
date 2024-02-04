@@ -1,28 +1,28 @@
 export default {
 	async scheduled(event, env, ctx) {
 		const config = JSON.parse(await env.STATUS_INFO.get('CONFIG'));
-		let data = { monitors: {}, date: new Date().getTime(), notice: config['notice'] };
-		//console.log(config);
+		let data = { monitors: {}, notice: config['notice'] };
 		for (let i of config['monitors']) {
-			console.log(i);
-			if (i['type'] == 'website') {
+			if (i['type'] == 'website' || i['type'] == 'keyword') {
 				await fetch(i['url'], { method: i['method'] })
-					.then((response) => {
+					.then(async (response) => {
+						data['monitors'][i['name']] = { time: new Date().getTime(), status: false };
 						if (response.status == 200) {
-							//console.log("Website is up!1");
-							data['monitors'][i['name']] = true;
-						} else {
-							//console.log("Website is down!2");
-							data['monitors'][i['name']] = false;
+							if (i['type'] != 'keyword') {
+								data['monitors'][i['name']]['status'] = true;
+							} else {
+								if ((await response.text()).includes(i['keyword'])) {
+									data['monitors'][i['name']]['status'] = true;
+								}
+							}
 						}
 					})
 					.catch(() => {
-						//console.log("Website is down!3");
-						data['monitors'][i['name']] = false;
+						data['monitors'][i['name']] = { time: new Date().getTime(), status: false };
 					});
 			}
 		}
-		//console.log(data);
+
 		await env.STATUS_INFO.put('DATA', JSON.stringify(data));
 	},
 };
