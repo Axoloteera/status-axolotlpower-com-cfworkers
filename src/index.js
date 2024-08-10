@@ -7,7 +7,7 @@ export default {
 				await fetch(i['url'], { method: i['method'] })
 					.then(async (response) => {
 						data['monitors'][i['name']] = { time: new Date().getTime(), status: false };
-						if (response.status == 200) {
+						if (response.status == 200 || response.status == 400 || response.status == 401 || response.status == 403) {
 							if (i['type'] != 'keyword') {
 								data['monitors'][i['name']]['status'] = true;
 							} else {
